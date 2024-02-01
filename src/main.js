@@ -1,8 +1,9 @@
 import Vue from 'vue'
-import App from './App.vue'
-
+import CommentWorkspace from './CommentWorkspace.vue'
+import store from './store/index'
+import './assets/css/tw-output.css'
 Vue.config.productionTip = false
-
 new Vue({
-  render: h => h(App),
+  store,
+  render: h => h(CommentWorkspace),
 }).$mount('#app')
