@@ -11,33 +11,52 @@
       :items="JSON.stringify([
         {
           iconId: 'Edit',
-          label: 'Edit',
+          label: '編集',
           disabled: 'false',
           value: { action: 'edit' },
           tooltip: 'ユーザー情報',
         },
         {
           iconId: 'Delete',
-          label: 'Delete',
+          label: '削除',
           disabled: 'false',
           value: { action: 'delete' },
           tooltip: 'ユーザー情報',
         },
       ])"
     />
-    <!-- <button class="cmt-absolute cmt-right-1 cmt-top-1" @click="onClickOptionsBtn">
-      options
-    </button>
-    <div v-show="showOptions" class="cmt-absolute cmt-right-2 cmt-top-8 cmt-bg-white cmt-rounded-md cmt-shadow-lg cmt-border-gray-500 cmt-border-1 cmt-p-1 cmt-z-50 cmt-cursor-pointer">
-      <div class="cmt-text-xs cmt-p-1" @click="onEditComment">edit</div>
-      <div class="cmt-text-xs cmt-p-1" @click="onDeleteComment">delete</div>
-    </div> -->
     <div>
       <span class="cmt-font-semibold cmt-mr-4">{{ commentItemData.creatorInfo.name }}</span> 
       <span class="cmt-text-sm cmt-font-normal cmt-text-txtGray">{{  convertTimeToFormattedString(new Date(commentItemData.createdAt), 'Asia/Tokyo') }}</span>
     </div>
     <div class="cmt-mt-2">
-      <TiptapEditor v-model="inputHtml" :editable="false" :auto-focus="false" />
+      <!-- <TiptapEditor v-model="inputHtml" :editable="editable" /> -->
+      <TiptapEditor v-model="inputHtml" :editable="editable" />
+      <div v-if="editable" class="cmt-flex cmt-justify-end cmt-mt-4">
+        <div>
+          <flux-button
+            class="mr-4"
+            type="primary"
+            label="アップデート"
+            :no-outline="true"
+            :disabled="false"
+            tooltip='ボタン'
+            @click="onUpdateComment"
+          />
+        </div>
+        <div>
+          <flux-button
+            type="normal"
+            label="キャンセル"
+            :no-outline="false"
+            :disabled="false"
+            tooltip='ボタン'
+            @click="onCancelUpdateComment"
+          />
+        </div>
+        
+        
+      </div>
     </div>
   </div>
 </template>
@@ -46,6 +65,7 @@ import UnreadBadge from './UnreadBadge.vue';
 import TiptapEditor from './Editor/TiptapEditor.vue';
  
 export default {
+  emits:['update-reply', 'delete-reply'],
   props:{
     commentItemData: Object,
     isReply: Boolean,
@@ -64,6 +84,14 @@ export default {
   created(){
     this.inputHtml = this.commentItemData.message
   },
+  watch:{
+    commentItemData: {
+      handler(newValue){
+        this.inputHtml = newValue.message
+      },
+      deep: true
+    }
+  },
   methods:{
     convertTimeToFormattedString(time, timezone) {
       const options = {
@@ -79,16 +107,59 @@ export default {
       return formattedString.replace(',', '');
     },
     handleSelectAction(option){
-      console.log(option.action);
+      if(option.action === 'edit'){
+        this.editable = !this.editable
+      }
+      if(option.action === 'delete'){
+        this.onDeleteComment()
+      }
     },
-    onEditComment(){
-      this.editable = !this.editable
+    onUpdateComment(){
+      // if update reply
+      if(this.isReply){
+        const dataUpdate = {
+          id: this.commentItemData.id,
+          message: this.inputHtml,
+        }
+        // call api to update reply
+        const fakeUpdatedReply = {
+          id: dataUpdate.id,
+          message: dataUpdate.message,
+          creatorInfo: {
+            id: 'd65e13b1-f274-4708-96fb-18096f1a5beb',
+            mailAddress: 'apm-dxpf-dev014@fujifilm.com',
+            name: '統合 十四'
+          },
+          createdAt: '2024-01-22T03:09:20.960Z',
+          mentionTo: [],
+          unread: false,
+          isMentioned: false
+        }
+        this.$emit('update-reply', fakeUpdatedReply)
+        this.editable = false
+      }else{
+        // if update comment
+        const dataUpdate = {
+          threadId: this.commentItemData.id,
+          message: this.inputHtml
+        }
+        this.$store.dispatch('updateComment', dataUpdate)
+        this.editable = false
+      }
     },
     onDeleteComment(){
-      console.log("delelte");
+      if(this.isReply){
+        // if delete reply
+        // call api to delete reply
+        this.$emit('delete-reply', this.commentItemData.id)
+      }else{
+        // if delete comment
+        this.$store.dispatch('deleteComment', this.commentItemData.id)
+      }
     },
-    onClickOptionsBtn(){
-      this.showOptions = !this.showOptions
+    onCancelUpdateComment(){
+      this.inputHtml = this.commentItemData.message
+      this.editable = false
     }
   }
 };

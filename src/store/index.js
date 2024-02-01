@@ -34,7 +34,7 @@ const actions = {
       items: [
         {
           id: "c1324036-3a9e-425e-a7ae-18a9ff40feec",
-          message: "<p>new comment</p>",
+          message: "<p><span class=\"mention\">@Lea Thompson</span> comment</p>",
           creatorInfo: {
             id: "d65e13b1-f274-4708-96fb-18096f1a5beb",
             mailAddress: "apm-dxpf-dev014@fujifilm.com",
@@ -192,8 +192,7 @@ const actions = {
   addComment({ commit }, comment) {
     // call api create comment
     // api return data
-    console.log(comment);
-    const createdComment = {
+    const fakeCreatedComment = {
       id: Math.floor(Math.random() * (1000 - 1 + 1)) + 1,
       message: comment,
       creatorInfo: {
@@ -206,12 +205,28 @@ const actions = {
       unread: true,
       isMentioned: false,
     };
-    commit("ADD_COMMENT", createdComment);
+    commit("ADD_COMMENT", fakeCreatedComment);
   },
-  updateComment({ commit }, updatedComment) {
-    commit("UPDATE_COMMENT", updatedComment);
+  updateComment({ commit }, dataUpdate) {
+    // call api to update comment
+    const fakeUpdatedComment = {
+      id: dataUpdate.id,
+      message: dataUpdate.message,
+      creatorInfo: {
+        id: "d65e13b1-f274-4708-96fb-18096f1a5beb",
+        mailAddress: "apm-dxpf-dev014@fujifilm.com",
+        name: "統合 十四",
+      },
+      createdAt: "2024-01-22T03:09:20.960Z",
+      mentionTo: [],
+      unread: true,
+      isMentioned: false,
+    };
+    commit("UPDATE_COMMENT", fakeUpdatedComment);
   },
   deleteComment({ commit }, commentId) {
+    // call api to delete comment
+    // if success
     commit("DELETE_COMMENT", commentId);
   },
 };

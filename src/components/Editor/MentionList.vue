@@ -110,6 +110,6 @@ export default {
 }
 
 .item.is-selected {
-  border-color: #000;
+  background-color: darkgrey;
 }
 </style>
