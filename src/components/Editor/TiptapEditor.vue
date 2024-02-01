@@ -1,5 +1,5 @@
 <template>
-  <editor-content :editor="editor" />
+  <editor-content :editor="editor" id="tiptap-editor"/>
 </template>
 
 <script>
@@ -40,7 +40,6 @@ export default {
       if (isSame) {
         return;
       }
-
       this.editor.commands.setContent(value, false);
     },
     editable(newVal) {
@@ -71,13 +70,17 @@ export default {
         // HTML
         this.$emit("input", this.editor.getHTML());
 
-        // JSON
+        // Text
         this.$emit("input-text", this.editor.getText());
       },
       onBlur: () => {
         this.$emit("lose-focus");
       },
     });
+
+    if(!this.editable){
+      this.editor.setEditable(this.editable)
+    }
   },
 
   beforeUnmount() {
@@ -90,11 +93,12 @@ export default {
 .mention {
   padding: 0.1rem 0.3rem;
   box-decoration-break: clone;
-  color: orange;
+  color: #007B85;
 }
 
 a {
-  color: #68cef8 !important;
+  color: #099ad8 !important;
+  text-decoration: underline !important;
 }
 
 code {

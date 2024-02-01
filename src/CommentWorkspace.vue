@@ -16,12 +16,14 @@
         class="cmt-bg-bgGray cmt-py-6 cmt-px-4 cmt-border-t-[1px] cmt-border-gray-300 cmt-w-full"
       >
         <div v-if="!isCommenting">
-          <button
+          <flux-button
+            type='normal'
+            label='新規コメント'
+            :no-outline="false"
+            :disabled="false"
+            tooltip='ボタン'
             @click="onShowCreateComment"
-            class="cmt-border cmt-border-black cmt-bg-bgGray cmt-py-1 cmt-px-4"
-          >
-            新規コメント
-          </button>
+          />
         </div>
         <div v-else>
           <CreateComment @input-lose-focus="handleInputLoseFocus" />
