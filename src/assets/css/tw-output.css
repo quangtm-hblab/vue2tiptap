@@ -568,6 +568,10 @@ video {
   top: 1rem;
 }
 
+.cmt-z-50 {
+  z-index: 50;
+}
+
 .cmt-my-\[20px\] {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -655,6 +659,10 @@ video {
   border-top-right-radius: 0.5rem;
 }
 
+.cmt-border-2 {
+  border-width: 2px;
+}
+
 .cmt-border-b-\[1px\] {
   border-bottom-width: 1px;
 }
@@ -665,6 +673,11 @@ video {
 
 .cmt-border-t-\[1px\] {
   border-top-width: 1px;
+}
+
+.cmt-border-Mint {
+  --tw-border-opacity: 1;
+  border-color: rgb(119 179 179 / var(--tw-border-opacity));
 }
 
 .cmt-border-\[\#E7E7E7\] {

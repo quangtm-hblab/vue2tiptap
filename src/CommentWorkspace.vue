@@ -4,9 +4,10 @@
       class="cmt-bg-bgGray cmt-flex cmt-flex-col"
       style="height: calc(100% - 48px)"
     >
+    <JobWebSocketObserver />
       <div class="cmt-h-full cmt-pl-4 cmt-overflow-auto flex-grow">
         <ThreadItem 
-          v-for="item in fakeListComment"
+          v-for="item in listComment"
           :key="item.id"
           :thread-item-data="item" 
         />
@@ -26,7 +27,7 @@
           />
         </div>
         <div v-else>
-          <CreateComment @input-lose-focus="handleInputLoseFocus" />
+          <CreateComment @input-lose-focus="handleInputLoseFocus" @create-comment="handleCreateComment" />
         </div>
       </div>
     </div>
@@ -36,10 +37,12 @@
 <script>
 import ThreadItem from "./components/ThreadItem.vue"
 import CreateComment from "./components/CreateComment.vue";
+import JobWebSocketObserver from './components/EventListener/JobWebSocketObserver'
 export default {
   components: {
     CreateComment,
     ThreadItem,
+    JobWebSocketObserver
   },
   data() {
     return {
@@ -48,12 +51,15 @@ export default {
   },
   computed: {
     //fake data comment
-    fakeListComment() {
+    listComment() {
       return this.$store.state.comments;
     },
   },
   created() {
     this.$store.dispatch("fetchComments");
+    this.$store.dispatch("setWorkspaceId")
+    this.$store.dispatch("setRepositoryId")
+    this.$store.dispatch("fetchMembers")
   },
   mounted() {
     console.log(this.$store);
@@ -61,6 +67,10 @@ export default {
   methods: {
     onShowCreateComment() {
       this.isCommenting = true;
+    },
+    handleCreateComment(newComment) {
+      this.$store.dispatch('addComment', newComment)
+      this.isCommenting = false
     },
     handleInputLoseFocus() {
       this.isCommenting = false;

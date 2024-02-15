@@ -9,15 +9,20 @@
     "tailwind": "npx tailwindcss -i ./src/assets/css/tw-input.css -o ./src/assets/css/tw-output.css"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
     "@tiptap/extension-link": "^2.2.1",
     "@tiptap/extension-mention": "^2.2.1",
     "@tiptap/pm": "^2.2.1",
     "@tiptap/starter-kit": "^2.2.1",
     "@tiptap/suggestion": "^2.2.1",
     "@tiptap/vue-2": "^2.2.1",
-    "axios": "^0.19.2",
-    "tippy.js": "^6.3.7",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^1.0.2",
+    "@wangeditor/plugin-mention": "^1.0.0",
+    "axios": "^1.6.7",
     "core-js": "^3.8.3",
+    "tippy.js": "^6.3.7",
+    "universal-cookie": "^4.0.3",
     "vue": "^2.6.14",
     "vuex": "3.0.1"
   },
@@ -28,9 +33,9 @@
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "eslint": "^7.32.0",
+    "eslint-plugin-vue": "^8.0.3",
     "prettier": "^2.5.1",
     "tailwindcss": "^3.4.1",
-    "eslint-plugin-vue": "^8.0.3",
     "vue-template-compiler": "^2.6.14"
   },
   "eslintConfig": {

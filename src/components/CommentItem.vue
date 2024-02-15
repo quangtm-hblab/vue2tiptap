@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/no-parsing-error -->
 <template lang="">
   <div class="cmt-relative cmt-py-4 cmt-pl-4 cmt-bg-white" :class="commentItemData.isMentioned ? 'cmt-border-l-Orange cmt-border-l-4' : ''">
     <UnreadBadge v-if="commentItemData.unread" class="cmt-top-4 cmt-left-1"></UnreadBadge>
@@ -30,8 +29,7 @@
       <span class="cmt-text-sm cmt-font-normal cmt-text-txtGray">{{  convertTimeToFormattedString(new Date(commentItemData.createdAt), 'Asia/Tokyo') }}</span>
     </div>
     <div class="cmt-mt-2">
-      <!-- <TiptapEditor v-model="inputHtml" :editable="editable" /> -->
-      <TiptapEditor v-model="inputHtml" :editable="editable" />
+      <WangEditor @input-change="handleInputChange" :content="content" :editable="editable"></WangEditor>
       <div v-if="editable" class="cmt-flex cmt-justify-end cmt-mt-4">
         <div>
           <flux-button
@@ -62,7 +60,7 @@
 </template>
 <script>
 import UnreadBadge from './UnreadBadge.vue';
-import TiptapEditor from './Editor/TiptapEditor.vue';
+import WangEditor from './WangEditor/WangEditor.vue';
  
 export default {
   emits:['update-reply', 'delete-reply'],
@@ -73,21 +71,21 @@ export default {
   data(){
     return {
       showOptions: false,
-      inputHtml: '',
+      content: '',
       editable: false,
     }
   },
   components:{
     UnreadBadge,
-    TiptapEditor
+    WangEditor
   },
   created(){
-    this.inputHtml = this.commentItemData.message
+    this.content = this.commentItemData.message
   },
   watch:{
     commentItemData: {
       handler(newValue){
-        this.inputHtml = newValue.message
+        this.content = newValue.message
       },
       deep: true
     }
@@ -114,12 +112,15 @@ export default {
         this.onDeleteComment()
       }
     },
+    handleInputChange(newComment){
+      this.content = newComment.htmlValue
+    },
     onUpdateComment(){
       // if update reply
       if(this.isReply){
         const dataUpdate = {
           id: this.commentItemData.id,
-          message: this.inputHtml,
+          message: this.content,
         }
         // call api to update reply
         const fakeUpdatedReply = {
@@ -158,7 +159,7 @@ export default {
       }
     },
     onCancelUpdateComment(){
-      this.inputHtml = this.commentItemData.message
+      this.content = this.commentItemData.message
       this.editable = false
     }
   }
